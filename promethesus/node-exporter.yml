@@ -1,0 +1,47 @@
+---
+- hosts: all
+  become: true
+  vars_files:
+  - vars/var-files.yml
+  tasks:
+  - name: create a group
+    group:
+     name: "{{ item }}"
+     state: present
+    with_items: "{{ users }}"
+
+  - name: create user alertmanager and prometheous with no login
+    user:
+     name: "{{ item }}"
+     group: "{{ item }}"
+     shell: /sbin/nologin
+     append: yes
+     comment: "{{ item }} nologin user"
+     state: present
+    with_items: "{{ users }}"
+
+##################################################Installing the binaries for NODE_EXPORTER##########################
+
+  - name: install node_exporter
+    unarchive:
+     src: "https://github.com/prometheus/node_exporter/releases/download/v{{ version }}/node_exporter-{{ version }}.linux-amd64.tar.gz" 
+     dest: /tmp/
+     remote_src: yes
+  - name: copy binary file to /usr/local/bin
+    copy:
+     src: "/tmp/node_exporter-{{ version }}.linux-amd64/node_exporter"
+     dest: "/usr/local/bin/node_exporter"
+     remote_src: yes
+     mode: 0755
+  - name:
+    template:
+     src: ./template/node_exporter.service.js
+     dest: /etc/systemd/system/node_exporter.service
+
+###############################################STARTING THE SERVICE###############################################
+
+  - name: Start node_exporter service
+    service:
+     name: node_exporter
+     state: started
+     enabled: yes

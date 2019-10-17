@@ -1,0 +1,9 @@
+1. Created one bash script on ec2 instance giving me option to either install ansible or prometheus or both or even none .
+2. After successfull setup of ansible
+3. Checked the connectivity of host using ping module
+4. Since I had already installed prometheus , I setup the node_exporter on all the hosts listed in the inventory
+5. Created an ansible playbook to setup node_exporter.
+6. Again created playbook to setup alertmanager on the same server only .
+7. To monitor the application , Installed redis-server as a service on hosts 
+8. To monitor the redis service need to install redis_exporter , so installed using ansible role
+9. setup graphana on the same host for visualisation , changed the data source to prometheus of local host , and created the sample graphical dashboard of cpu , disk i/o ,ram.

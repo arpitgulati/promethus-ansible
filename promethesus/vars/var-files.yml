@@ -1,0 +1,7 @@
+---
+########THIS IS THE VARIABLE FILE#########
+version: 0.18.1
+users:
+- node_exporter
+- alertmanager
+service_name: node_exporter
